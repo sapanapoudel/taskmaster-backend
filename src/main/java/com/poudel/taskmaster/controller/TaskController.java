@@ -1,9 +1,11 @@
 package com.poudel.taskmaster.controller;
 import com.poudel.taskmaster.model.History;
 import com.poudel.taskmaster.model.Task;
+import com.poudel.taskmaster.repository.S3Client;
 import com.poudel.taskmaster.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -16,6 +18,12 @@ public class TaskController {
 
     @Autowired
     TaskRepository taskRepository;
+
+    private S3Client s3Client;
+    @Autowired
+    TaskController(S3Client s3Client ) {
+        this.s3Client = s3Client;
+    }
 
     @GetMapping("/tasks")
     public List<Task> getTasks(){
@@ -31,6 +39,16 @@ public class TaskController {
         newTask.getHistoryList().add(history);
         taskRepository.save(newTask);
         return newTask;
+    }
+
+    //Post mapping for image
+    @PostMapping("/tasks/{id}/images")
+    public Task uploadImage(@PathVariable String id, @RequestParam(value="file") MultipartFile file) {
+        String pic = this.s3Client.uploadFile(file);
+        Task task = taskRepository.findById(id).get();
+        task.setPic(pic);
+        taskRepository.save(task);
+        return task;
     }
 
     @GetMapping("/users/{name}/tasks")
