@@ -31,3 +31,31 @@ This should work (i.e. return an empty array) if the requested username does not
 - Melfi Perez
 -Trevor Dobson
 
+## lab38. Notification Services
+#### Tasks: 
+* Created new SNS topic called TaskComplete
+```
+Documented ARN link and put them in lambda functions
+```
+* Ceated two lambda functions
+```
+createSubscriber
+notification
+```
+* Tested both with my number
+```
+Test:
+{
+   "phoneNumber" : "+123456789"
+}
+```
+* SNS sent the notification in my text message
+#### Test
+* SNS Topic
+![SNS topic](assets/SNS.png)
+
+  
+* Lambda Function
+![create subscriber](assets/createSubscriber_Lambda.png)
+
+![notification](assets/notification.png)
